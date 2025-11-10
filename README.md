@@ -79,32 +79,3 @@ LEVEL_MULTIPLIER=100
 docker-compose up --build
 ```
 
-🧱 Структура проекта
-
-gosha-bot/
-│
-├── cmd/
-│   └── main.go             # Точка входа
-│
-├── leveling/
-│   ├── leveling.go         # Логика начисления XP и уровней
-│   ├── roles.go            # Управление ролями
-│   └── storage.go          # Работа с БД
-│
-├── commands/
-│   ├── level.go            # /level
-│   ├── clear.go            # /clear
-│   ├── give.go            # /taker
-│   ├── remove.go           # /remove
-│   └── top.go              # /top
-│
-├── db/
-│   ├── migrations/         # SQL-миграции
-│   └── init.sql
-│
-├── docker-compose.yml
-├── Dockerfile
-├── go.mod
-├── go.sum
-└── .env.example
-
