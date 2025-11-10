@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT:-55432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      GUILD_ID: ${GUILD_ID}
+      WELCOME_CHANNEL_ID: ${WELCOME_CHANNEL_ID}
+      SELF_ROLE_ID: ${SELF_ROLE_ID}
+      ADMIN_ROLE_IDS: ${ADMIN_ROLE_IDS}
+      GAMER_ROLE_ID: ${GAMER_ROLE_ID}
+      MESSAGE_XP_COOLDOWN_SECONDS: ${MESSAGE_XP_COOLDOWN_SECONDS}
+      MESSAGE_XP_AWARD: ${MESSAGE_XP_AWARD}
+      VOICE_XP_INTERVAL_SECONDS: ${VOICE_XP_INTERVAL_SECONDS}
+      VOICE_XP_AWARD: ${VOICE_XP_AWARD}
+      ADMIN_LOG_CHANNEL_ID: ${ADMIN_LOG_CHANNEL_ID}
+      KEEP_CATEGORY_ID: ${KEEP_CATEGORY_ID}
+      MUTE_ROLE_ID: ${MUTE_ROLE_ID}
+      POSTGRES_DSN: ${POSTGRES_DSN}   # вот это главное
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  pgdata:
